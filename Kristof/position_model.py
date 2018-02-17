@@ -80,8 +80,11 @@ class observed_galaxy_position(object):
         if epoch == np.inf:
             log.info("No epoch is given");
             raise ValueError;
-        if obs == None:
-            obs = np.array([]);
+        try:
+            if obs == None:
+                obs = np.array([]);
+        except:
+            pass;
             
         self.epoch = int(epoch);
         self.ID = int(obs[0]);
@@ -120,7 +123,10 @@ class model_galaxy(object):
         vectorized_RA_list = np.array(RA_list);
         vectorized_RA_err_list = np.array(RA_err_list);
         
-        return np.average(vectorized_RA_list, weights=vectorized_RA_err_list), np.std(vectorized_RA_list);
+        if np.std(vectorized_RA_list) > 0:
+            return np.average(vectorized_RA_list, weights=vectorized_RA_err_list), np.std(vectorized_RA_list);
+        else:
+            return np.average(vectorized_RA_list, weights=vectorized_RA_err_list), np.average(vectorized_RA_err_list);
 
     @property
     def Dec_pdf(self):
@@ -135,7 +141,10 @@ class model_galaxy(object):
         vectorized_Dec_list = np.array(Dec_list);
         vectorized_Dec_err_list = np.array(Dec_err_list);
         
-        return np.average(vectorized_Dec_list, weights=vectorized_Dec_err_list), np.std(vectorized_Dec_list);
+        if np.std(vectorized_Dec_list) > 0:
+            return np.average(vectorized_Dec_list, weights=vectorized_Dec_err_list), np.std(vectorized_Dec_list);
+        else:
+            return np.average(vectorized_Dec_list, weights=vectorized_Dec_err_list), np.average(vectorized_Dec_err_list);
 
     @property
     def Flux_pdf(self):
@@ -150,7 +159,10 @@ class model_galaxy(object):
         vectorized_Flux_list = np.array(Flux_list);
         vectorized_Flux_err_list = np.array(Flux_err_list);
         
-        return np.average(vectorized_Flux_list, weights=vectorized_Flux_err_list), np.std(vectorized_Flux_list);
+        if np.std(vectorized_Flux_list) > 0:
+            return np.average(vectorized_Flux_list, weights=vectorized_Flux_err_list), np.std(vectorized_Flux_list);
+        else:
+            return np.average(vectorized_Flux_list, weights=vectorized_Flux_err_list), np.average(vectorized_Flux_err_list);
 
 #=================================================
 #SUPPORT and EVALUATE FUNCTIONS
@@ -177,7 +189,7 @@ def p_value_of_observation(model_galaxy, obs):
     The output is the averaged p-value.
     
     :param model_galaxy: The model of a 'real galaxy' consist a bunch of observations
-    :param obs: The observed galaxy (observed_galaxy_poition class)    
+    :param obs: The observed galaxy (observed_galaxy_position class)    
     """
     
     model_RA_mu, model_RA_sigma = model_galaxy.RA_pdf;
