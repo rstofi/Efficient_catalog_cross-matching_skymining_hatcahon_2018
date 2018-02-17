@@ -32,6 +32,10 @@ Cost matrix for the Hungarian algorithm
 #=================================================
 import numpy as np;
 from scipy import stats;
+import glob;
+
+from position_model import *;
+from matching_algorithm import *;
 
 #=================================================
 #SUPPORT FUNCTIONS
@@ -78,6 +82,17 @@ def add_noise(source, **kwargs):
         source_with_err[i] = np.fabs(source_with_err[i]);
     
     return source_with_err;
+
+
+def firts_rows_from_actual_dataset(N):
+    """Returns the first N row from the acrtual dataset for each epoch and saves it into a folder
+    
+    :param N: The number of rows used
+    """
+    
+    epoch_data_list = glob.glob("./Data/*.csv");
+    
+    epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
 
 #=================================================
 #MAIN

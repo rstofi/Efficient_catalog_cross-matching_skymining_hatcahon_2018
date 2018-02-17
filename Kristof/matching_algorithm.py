@@ -67,17 +67,27 @@ def solve_matching_for_galaxy_positions(sm, observed_epoch,epoch_ID):
     
     return sm;
 
-def tinder_for_galaxy_positions():
+def tinder_for_galaxy_positions(folder=None, initial_dataset=None):
     """Crosmatch the poitions for all the epochs while iterate trough all the observations
+
+    :param folder: The folder where the data is
+    :param initial_dataset: The dataset path (&name) which define the initial sky model
     """
 
     #Create Initial sky model
-    initial_epoch = np.genfromtxt('./Small_simulated_data/test_epoch00.csv',  dtype=float, delimiter=',',  skip_header=0);
+    if initial_dataset == None:
+        initial_dataset = './Small_simulated_data/test_epoch00.csv';
+    
+    initial_epoch = np.genfromtxt(initial_dataset,  dtype=float, delimiter=',',  skip_header=0);
     initial_epoch_ID =0;
 
     sm = create_initial_sky_model(initial_epoch_ID, initial_epoch);
     #Setup datafile list
-    epoch_data_list = glob.glob("./Small_simulated_data/*.csv");
+    
+    if folder == None:
+        folder = './Small_simulated_data';
+    
+    epoch_data_list = glob.glob("%s/*.csv" %folder);
 
     #Iterate trough observations
     ep = 1;#Epoch ID
