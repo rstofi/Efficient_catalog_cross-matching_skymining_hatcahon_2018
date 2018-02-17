@@ -2,7 +2,8 @@
 import panda as pd
 from matplotlib import
 scatterplot
-path = 'C:\Users\karl_\Dropbox\Study, business\Data Science, John Hopkins, Coursera\Hackastron\spectra_ADACS'
+path = "C:\Users\karl_\Dropbox\Study, business\Data Science, John Hopkins, Coursera\Hackastron\spectra_ADACS"
+
 os.chdir(path)
 data1 = "172829-28461_spectra_etau"
 csv_file = csv.reader('data1',delimiter=' ')
