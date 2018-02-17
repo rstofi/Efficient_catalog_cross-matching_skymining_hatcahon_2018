@@ -23,9 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ------------------------------
 
-Plotting functions for basic uv gridding simulations -> see the corresponding simulations
+Visualization for Hachastron
 
-IMPORTANT: simulations uses arl thus this module is not strongly related to the radio surveys data rate support library
 """
 
 #=================================================
@@ -36,18 +35,85 @@ from matplotlib import pylab;
 from matplotlib import pyplot as plt;
 
 #=================================================
+#SUPPORT FUNCTIONS
+#=================================================
+
+def get_data_colums(epoch):
+    """Return the data columns of a given epoch
+    
+    :param epoch: given epoch in a numpy array, already readed from .csv
+    """
+    
+    ID = epoch[:,0];
+    RA = epoch[:,1];
+    RA_err = epoch[:,2];
+    Dec = epoch[:,3];
+    Dec_err = epoch[:,4];
+    Flux = epoch[:,5];
+    Flux_err = epoch[:,6];
+
+    return ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err;
+
+#=================================================
+#PLOT FUNCTIONS
+#=================================================
+
+def plot_epoch_sky(epoch):
+    """Plot the observed galaxy positions in the sky
+    
+    :param epoch: given epoch in a numpy array, already readed from .csv 
+    """
+
+    ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err = get_data_colums(epoch);
+
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Sources on the sky', size=24);
+        
+    plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err, fmt='o');
+
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();
+
+def plot_two_epoch_sky(epoch1, epoch2):
+    """Plot the observed galaxy positions in the sky
+    
+    :param epoch1: The firs given epoch in a numpy array, already readed from .csv
+    :param epoch2: The second given epoch in a numpy array, already readed from .csv
+    """
+
+    ID_1, RA_1, RA_err_1, Dec_1, Dec_err_1, Flux_1, Flux_err_1 = get_data_colums(epoch1);
+    ID_2, RA_2, RA_err_2, Dec_2, Dec_err_2, Flux_2, Flux_err_2 = get_data_colums(epoch2);
+
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Sources on the sky', size=24);
+        
+    plt.errorbar(RA_1, Dec_1, xerr=RA_err_1, yerr=Dec_err_1, fmt='o', color='blue', alpha=0.5);
+    plt.errorbar(RA_2, Dec_2, xerr=RA_err_2, yerr=Dec_err_2, fmt='o', color='red', alpha=0.5);
+
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();
+
+#=================================================
 #MAIN
 #=================================================
-epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
+if __name__ == "__main__":
+    """Testing
+    """
+    epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
+    epoch_1 = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
 
-ID = epoch_0[:,0];
-RA = epoch_0[:,1];
-RA_err = epoch_0[:,2];
-Dec = epoch_0[:,3];
-Dec_err = epoch_0[:,4];
-Flux = epoch_0[:,5];
-Flux_err = epoch_0[:,6];
+    plot_epoch_sky(epoch_0);
 
-plt.clf();
-plt.plot(RA,Dec,'.');
-plt.show();
+    plot_two_epoch_sky(epoch_0, epoch_1)
