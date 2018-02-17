@@ -36,18 +36,69 @@ from matplotlib import pylab;
 from matplotlib import pyplot as plt;
 
 #=================================================
+#PLOT FUNCTIONS
+#=================================================
+
+def plot_epoch_sky(epoch):
+    """Plot the observed galaxy positions in the sky
+    
+    :param epoch: given epoch in a numpy array, already readed from .csv 
+    """
+
+    ID = epoch[:,0];
+    RA = epoch[:,1];
+    RA_err = epoch[:,2];
+    Dec = epoch[:,3];
+    Dec_err = epoch[:,4];
+    Flux = epoch[:,5];
+    Flux_err = epoch[:,6];
+
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Sources on the sky', size=24);
+        
+    plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err, fmt='o');
+
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();
+
+def plot_two_epoch_sky(epoch1, epoch2):
+    """Plot the observed galaxy positions in the sky
+    
+    :param epoch: given epoch in a numpy array, already readed from .csv 
+    """
+
+    ID = epoch[:,0];
+    RA = epoch[:,1];
+    RA_err = epoch[:,2];
+    Dec = epoch[:,3];
+    Dec_err = epoch[:,4];
+    Flux = epoch[:,5];
+    Flux_err = epoch[:,6];
+
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Sources on the sky', size=24);
+        
+    plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err, fmt='o');
+
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();
+
+
+#=================================================
 #MAIN
 #=================================================
 epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
 
-ID = epoch_0[:,0];
-RA = epoch_0[:,1];
-RA_err = epoch_0[:,2];
-Dec = epoch_0[:,3];
-Dec_err = epoch_0[:,4];
-Flux = epoch_0[:,5];
-Flux_err = epoch_0[:,6];
-
-plt.clf();
-plt.plot(RA,Dec,'.');
-plt.show();
+plot_epoch_sky(epoch_0);
