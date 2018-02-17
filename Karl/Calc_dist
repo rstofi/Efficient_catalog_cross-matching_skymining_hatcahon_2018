@@ -73,6 +73,22 @@ def plot_two_epoch_sky(epoch1, epoch2):
 
     plt.show();
 
+# Karl attempt
+def find_index_of_nearest_xy(y_array, x_array, y_point, x_point):
+    distance1 = ((y_array-y_point)**2 + (x_array-x_point)**2)**(.5)
+    #idy,idx = np.where(distance1==distance1.min())
+    index = np.where(distance1==distance1.min())
+    distance = distance1[distance1==distance1.min()]
+    return index[0][0], distance
+
+
+def do_all(y_array, x_array):
+    store = []
+    for i in range(0,y_array.shape[0]):
+        store.append(find_index_of_nearest_xy(
+            x_array[:,2],x_array[:,1],y_array[i,2],y_array[i,1]))
+    return store
+
 #=================================================
 #MAIN
 #=================================================
@@ -82,34 +98,11 @@ if __name__ == "__main__":
     epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
     epoch_1 = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
 
-    #plot_epoch_sky(epoch_0);
-
-    #plot_two_epoch_sky(epoch_0, epoch_1)
-
     print(epoch_0[1:4,:])
+    results = do_all(epoch_1, epoch_0)
+    results = np.concatenate((epoch_1, results), axis=1)
+    #np.savetxt("C:/Users/karl_/Dropbox/Study, business/Data Science, John Hopkins, Coursera/Hackastron/epoch01temp.csv", results, delimiter=",")
+    np.savetxt('../Data/epoch01temp.csv', results, delimiter=",") # 7th col = index of epoch00 neighbour, 8th col = distance
 
-    epoch_0[1:2,1:10]
-# Karl attempt
-def find_index_of_nearest_xy(y_array, x_array, y_point, x_point):
-    distance1 = (y_array-y_point)**2 + (x_array-x_point)**2
-    idy,idx = numpy.where(distance==distance.min())
-    return idy[0],idx[0]
-
-def do_all(y_array, x_array, points):
-    store = []
-    for i in xrange(points.shape[1]):
-        store.append(find_index_of_nearest_xy(y_array,x_array,points[0,i],points[1,i]))
-    return store
-
-
-# Create some dummy data
-y_array = np.random.random(10000).reshape(100,100)
-x_array = np.random.random(10000).reshape(100,100)
-
-points = np.random.random(10000).reshape(2,5000)
-
-## Time how long it takes to run
-#start = time.time()
-results = do_all(y_array, x_array, points)
-#end = time.time()
-#print ('Completed in: ',end-start)
+    #epoch_0 = np.genfromtxt('C:/Users/karl_/Dropbox/Study, business/Data Science, John Hopkins, Coursera/Hackastron/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1)
+    #epoch_1 = np.genfromtxt('C:/Users/karl_/Dropbox/Study, business/Data Science, John Hopkins, Coursera/Hackastron/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1)
