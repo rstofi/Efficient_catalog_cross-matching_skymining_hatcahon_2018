@@ -34,6 +34,7 @@ import numpy as np;
 from scipy import stats;
 
 from position_model import *;
+from sky_model import *;
 
 #=================================================
 #LOGGING
@@ -42,24 +43,6 @@ import logging;
 
 log = logging.getLogger();
 log.setLevel(logging.INFO);
-
-#=================================================
-#CLASSES
-#=================================================
-class sky_model(object):
-    """Describe The whole sky model: position and flux of all detected galaxies
-    """
-    
-    def __init__(self, galax_model_list=None):    
-        """Class attributes
-        
-        :param galax_model_list: List of galaxy models
-
-        """
-        if galax_model_list == None:
-            galax_model_list = [];
-            
-        self.galax_model_list = galax_model_list;
 
 #=================================================
 #SUPPORT FUNCTIONS
@@ -96,20 +79,13 @@ def create_initial_sky_model(epoch_ID, epoch):
     
     return sm;
 
-#=================================================
-#MAIN
-#=================================================
-if __name__ == '__main__':
-    """Test
+def compute_cost_matrix(sm,observed_epoch,epoch_ID):
+    """Compute the cost matrix for the Hungarian algorithm
+    
+    :param sm: Sky model
+    :param observed_epoch: given epoch in a numpy array, already readed from .csv
+    :param epoch_ID: The ID pf the observed epoch
     """
-    initial_epoch = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=0);
-    initial_epoch_ID =0;
-    
-    observed_epoch = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=0); 
-    epoch_ID = 1;    
-    
-    sm = create_initial_sky_model(initial_epoch_ID, initial_epoch);
-
     #Create cost matrix
     assert observed_epoch.shape[0] == len(sm.galax_model_list), "Discrepancy model- and observed galaxy number"
 
@@ -125,11 +101,29 @@ if __name__ == '__main__':
             i += 1;
             
         j += 1;
-        print(j);
             
-            #print(galaxy_model.Flux_pdf);
+    return cost_matrix;
 
-    print(cost_matrix);
+#=================================================
+#MAIN
+#=================================================
+if __name__ == '__main__':
+    """Test
+    """
+    initial_epoch = np.genfromtxt('./Small_simulated_data/test_epoch00.csv',  dtype=float, delimiter=',',  skip_header=0);
+    initial_epoch_ID =0;
+    
+    #observed_epoch = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=0);
+    observed_epoch = np.genfromtxt('./Small_simulated_data/test_epoch10.csv',  dtype=float, delimiter=',',  skip_header=0); 
+    epoch_ID = 1;    
+    
+    sm = create_initial_sky_model(initial_epoch_ID, initial_epoch);
+
+    cm = compute_cost_matrix(sm,observed_epoch,epoch_ID);
+
+    print(cm);
 
 #    print(len(sm.galax_model_list));
 #    print(len(sm.galax_model_list[0].obs_list));
+
+

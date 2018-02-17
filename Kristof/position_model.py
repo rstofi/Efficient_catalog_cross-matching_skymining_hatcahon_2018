@@ -126,7 +126,7 @@ class model_galaxy(object):
         if np.std(vectorized_RA_list) > 0:
             return np.average(vectorized_RA_list, weights=vectorized_RA_err_list), np.std(vectorized_RA_list);
         else:
-            return np.average(vectorized_RA_list, weights=vectorized_RA_err_list), np.average(vectorized_RA_err_list);
+            return np.average(vectorized_RA_list, weights=vectorized_RA_err_list), np.average(np.fabs(vectorized_RA_err_list));
 
     @property
     def Dec_pdf(self):
@@ -144,7 +144,7 @@ class model_galaxy(object):
         if np.std(vectorized_Dec_list) > 0:
             return np.average(vectorized_Dec_list, weights=vectorized_Dec_err_list), np.std(vectorized_Dec_list);
         else:
-            return np.average(vectorized_Dec_list, weights=vectorized_Dec_err_list), np.average(vectorized_Dec_err_list);
+            return np.average(vectorized_Dec_list, weights=vectorized_Dec_err_list), np.average(np.fabs(vectorized_Dec_err_list));
 
     @property
     def Flux_pdf(self):
@@ -162,7 +162,7 @@ class model_galaxy(object):
         if np.std(vectorized_Flux_list) > 0:
             return np.average(vectorized_Flux_list, weights=vectorized_Flux_err_list), np.std(vectorized_Flux_list);
         else:
-            return np.average(vectorized_Flux_list, weights=vectorized_Flux_err_list), np.average(vectorized_Flux_err_list);
+            return np.average(vectorized_Flux_list, weights=vectorized_Flux_err_list), np.average(np.fabs(vectorized_Flux_err_list));
 
 #=================================================
 #SUPPORT and EVALUATE FUNCTIONS
@@ -183,7 +183,26 @@ def p_value_of_observation(model_galaxy, obs):
     - The probability of a given RA randomly choosen from the model RA_pdf is further away than the observed galaxy RA
     - The probability of a given Dec randomly choosen from the model Dec_pdf is further away than the observed galaxy Dec
     - The probability of a given Flux randomly choosen from the model Flux_pdf is further away than the observed galaxy Flux
+      
+      
+      |
+      |
+      |
+      |
+    =   =
+     = =
+      =
+       
+    CALCULATES THE OPPOSITE!
     
+      =
+     = =
+    =   =
+      |
+      |
+      |
+      |
+
     These values are calles (two sided) p values.
     
     The output is the averaged p-value.
@@ -196,13 +215,12 @@ def p_value_of_observation(model_galaxy, obs):
     model_Dec_mu, model_Dec_sigma = model_galaxy.Dec_pdf;
     model_Flux_mu, model_Flux_sigma = model_galaxy.Flux_pdf;
 
-
     #The cdf can be higher than 0.5!
     if obs.RA >= model_RA_mu:
         p_value_RA = (1 - stats.norm.cdf(obs.RA, model_RA_mu, model_RA_sigma)) * 2;#Two sided distribution p value for RA
     else:
         p_value_RA = stats.norm.cdf(obs.RA, model_RA_mu, model_RA_sigma) * 2;#Two sided distribution p value for RA
-
+    
     if obs.Dec >= model_Dec_mu:
         p_value_Dec = (1 - stats.norm.cdf(obs.Dec, model_Dec_mu, model_Dec_sigma)) * 2;#Two sided distribution p value for Dec
     else:
@@ -213,7 +231,7 @@ def p_value_of_observation(model_galaxy, obs):
     else:
         p_value_Flux = stats.norm.cdf(obs.Flux, model_Flux_mu, model_Flux_sigma) * 2;#Two sided distribution p value for RA
     
-    final_p_value = (p_value_RA + p_value_Dec + p_value_Flux) / 3;
+    final_p_value = 1 - ((p_value_RA + p_value_Dec + p_value_Flux) / 3);
 
     return final_p_value;
     

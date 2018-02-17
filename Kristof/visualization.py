@@ -33,6 +33,10 @@ Visualization for Hachastron
 import numpy as np;
 from matplotlib import pylab;
 from matplotlib import pyplot as plt;
+import glob;
+
+from position_model import *;
+from matching_algorithm import *;
 
 #=================================================
 #SUPPORT FUNCTIONS
@@ -105,15 +109,77 @@ def plot_two_epoch_sky(epoch1, epoch2):
     
     plt.show();
 
+def plot_test_data():
+    """Plot the test data I created
+    """
+
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Sources on the sky', size=24);
+    
+    c = ['blue','red','green'];
+    
+    epoch_data_list = glob.glob("./Small_simulated_data/*.csv");
+    
+    ep = 0;
+    for epoch in epoch_data_list:
+        epoch = np.genfromtxt(epoch,  dtype=float, delimiter=',');
+        for i in range(0,3):
+            observed_galaxy = observed_galaxy_position(epoch=ep, obs=galaxy_obs(epoch, i));
+            
+            plt.errorbar(observed_galaxy.RA, observed_galaxy.Dec,
+                        xerr=observed_galaxy.RA_err, yerr=observed_galaxy.Dec_err,
+                        fmt='o', color=c[i], alpha=0.5);
+            
+        ep += 1;
+            
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();
+
+def plot_test_solution():
+    """Plot the test matching results
+    """
+    #Solve the problem
+    sm = tinder_for_galaxy_positions();
+    final_sky_model = human_readable_sky_model(sm);
+    
+    #Plot
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Sources on the sky', size=24);
+    
+    c = ['blue','red','green'];
+    
+    for i in range(0,len(final_sky_model)):
+        ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err = get_model_columns(final_sky_model,i);
+        
+        plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err,
+                    fmt='o', color=c[i], alpha=0.5);
+            
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();
+
 #=================================================
 #MAIN
 #=================================================
 if __name__ == "__main__":
     """Testing
     """
-    epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
-    epoch_1 = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
+    #epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
+    #epoch_1 = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
 
-    plot_epoch_sky(epoch_0);
+    #plot_epoch_sky(epoch_0);
+    #plot_two_epoch_sky(epoch_0, epoch_1)
 
-    plot_two_epoch_sky(epoch_0, epoch_1)
+    plot_test_data();
+    plot_test_solution();
