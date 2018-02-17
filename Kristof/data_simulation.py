@@ -38,6 +38,14 @@ from position_model import *;
 from matching_algorithm import *;
 
 #=================================================
+#LOGGING
+#=================================================
+import logging;
+
+log = logging.getLogger();
+log.setLevel(logging.INFO);
+
+#=================================================
 #SUPPORT FUNCTIONS
 #=================================================
 def get_parameter(kwargs, key, default=None):
@@ -90,9 +98,21 @@ def firts_rows_from_actual_dataset(N):
     :param N: The number of rows used
     """
     
-    epoch_data_list = glob.glob("./Data/*.csv");
+    epoch_data_list = glob.glob("../Data/*.csv");
     
-    epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
+    i = 0;
+    for epoch in epoch_data_list:
+        epoch = np.genfromtxt(epoch,  dtype=float, delimiter=',', skip_header=1);
+        
+        sub_epoch = epoch[0:N,:];
+        
+        #save
+        if i <= 9:
+            np.savetxt('./Subdatacube/test_epoch0%s.csv' %i, sub_epoch, delimiter=',');
+        else:
+            np.savetxt('./Subdatacube/test_epoch%s.csv' %i, sub_epoch, delimiter=',');
+        
+        i += 1;
 
 #=================================================
 #MAIN
@@ -100,6 +120,10 @@ def firts_rows_from_actual_dataset(N):
 if __name__ == '__main__':
     """Create test data
     """
+    
+    firts_rows_from_actual_dataset(N=10);
+    
+    exit();
     
     #Sources
     source1 = [0,20,0,20,0,20,0];

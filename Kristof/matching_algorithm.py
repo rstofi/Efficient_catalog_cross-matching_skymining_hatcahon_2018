@@ -57,13 +57,15 @@ def solve_matching_for_galaxy_positions(sm, observed_epoch,epoch_ID):
     :param epoch_ID: The ID pf the observed epoch
     """
     cm = compute_cost_matrix(sm,observed_epoch,epoch_ID);
-        
+    
+    ID_list = observed_epoch[:,0];
+    
     #Solve the maching problem with the hungarian algorithm
     observed_ind, matched_model_ind = linear_sum_assignment(cm)
     
     for obs_position_indice in observed_ind:
         add_observation(sm.galax_model_list[matched_model_ind[obs_position_indice]],
-                        observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, obs_position_indice)));
+                        observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, ID_list[obs_position_indice])));
     
     return sm;
 
@@ -85,9 +87,9 @@ def tinder_for_galaxy_positions(folder=None, initial_dataset=None):
     #Setup datafile list
     
     if folder == None:
-        folder = './Small_simulated_data';
+        folder = './Small_simulated_data/';
     
-    epoch_data_list = glob.glob("%s/*.csv" %folder);
+    epoch_data_list = glob.glob("%s*.csv" %folder);
 
     #Iterate trough observations
     ep = 1;#Epoch ID
@@ -95,7 +97,12 @@ def tinder_for_galaxy_positions(folder=None, initial_dataset=None):
         epoch = np.genfromtxt(epoch,  dtype=float, delimiter=',');
     
         sm = solve_matching_for_galaxy_positions(sm, epoch, ep);
-
+    
+        log.info("Epoch %i solved" %ep);
+        print('Epoch %i solved' %ep);#Logger not working somehow
+        
+        ep += 1;
+        
     return sm;
 
 #=================================================
@@ -129,9 +136,11 @@ if __name__ == '__main__':
 
     #solve_matching_for_galaxy_positions(sm, observed_epoch,epoch_ID);
 
-    sm = tinder_for_galaxy_positions();
+    sm = tinder_for_galaxy_positions(folder=None, initial_dataset=None);
     
+    #sm = tinder_for_galaxy_positions(folder='../Data/', initial_dataset='../Data/epoch00.csv');
     
+    #sm = tinder_for_galaxy_positions(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');
     
     exit();
     

@@ -79,6 +79,16 @@ def create_initial_sky_model(epoch_ID, epoch):
     
     return sm;
 
+def distance(a,b):
+    """Approx distance of two points in the sky
+    
+    :param a,b: the two points, both tuple
+    """
+    
+    dist = np.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
+
+    return dist;
+
 def compute_cost_matrix(sm,observed_epoch,epoch_ID):
     """Compute the cost matrix for the Hungarian algorithm
     
@@ -97,8 +107,16 @@ def compute_cost_matrix(sm,observed_epoch,epoch_ID):
         i = 0;
         for g_id in observed_galaxy_ID:
             
-            cost_matrix[i,j] = p_value_of_observation(galaxy_model,observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, g_id)));
+            if distance(galaxy_model.sky_position,
+                    (observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, g_id)).RA, observed_galaxy_position(epoch=epoch_ID,\
+                    obs=galaxy_obs(observed_epoch, g_id)).Dec)) > 9 * galaxy_model.sky_radial_sigma:
+                cost_matrix[i,j] = 0;
+            else:
+                cost_matrix[i,j] = p_value_of_observation(galaxy_model,observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, g_id)));
+           
             i += 1;
+            
+            log.info('Cost matrix row computed');
             
         j += 1;
             
