@@ -109,6 +109,33 @@ class model_galaxy(object):
             obs_list = [];
             
         self.obs_list = obs_list;
+
+    @property
+    def sky_position(self):
+        """return the (ra,dec) sky position tuple
+        """
+        return (np.average([x.RA for x in self.obs_list[:]]), np.average([x.Dec for x in self.obs_list[:]]));
+
+    @property
+    def sky_position_sigma(self):
+        """return the (ra,dec) sky position tuple
+        """
+        if len(self.obs_list[:]) > 1:
+            return (self.obs_list[0].RA_err,self.obs_list[0].Dec_err);
+        else:
+            return (np.std([x.RA_err for x in self.obs_list[:]]), np.std([x.Dec_err for x in self.obs_list[:]]));
+
+    @property
+    def sky_radial_sigma(self):
+        """return the (ra,dec) sky position tuple
+        """
+        
+        ra_sigma = self.sky_position_sigma[0];
+        dec_sigma = self.sky_position_sigma[1];
+        
+        r_sigma = np.sqrt(ra_sigma *ra_sigma + dec_sigma * dec_sigma);
+
+        return r_sigma;
         
     @property
     def RA_pdf(self):
@@ -246,7 +273,7 @@ if __name__ == '__main__':
     
     #ID =120;
     #galaxy = observed_galaxy_position(epoch=0, obs=galaxy_obs(epoch_0, ID));
-
+    
     #print(galaxy_obs(epoch_0, ID));
     #print(galaxy.ID, galaxy.RA, galaxy.RA_err, galaxy.Dec, galaxy.Dec_err, galaxy.Flux, galaxy.Flux_err);
 
@@ -259,6 +286,12 @@ if __name__ == '__main__':
 
     add_observation(simple_model1,obs1);
     add_observation(simple_model1,obs2);
+
+    #print(simple_model1.sky_position);
+    #print(simple_model1.sky_position_sigma);
+    #print(simple_model1.sky_radial_sigma);
+
+    exit();
 
     obs11 = observed_galaxy_position(epoch=0, obs=[0,20,1,1,1,1,1]);
     obs21 = observed_galaxy_position(epoch=1, obs=[0,21,1,2,1,2,1]);

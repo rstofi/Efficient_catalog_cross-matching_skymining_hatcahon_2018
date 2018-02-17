@@ -39,6 +39,14 @@ from position_model import *;
 from matching_algorithm import *;
 
 #=================================================
+#LOGGING
+#=================================================
+import logging;
+
+log = logging.getLogger();
+log.setLevel(logging.INFO);
+
+#=================================================
 #SUPPORT FUNCTIONS
 #=================================================
 
@@ -121,12 +129,12 @@ def plot_test_data(folder=None):
     plt.clf();
     plt.title('Sources on the sky', size=24);
     
-    c = ['blue','red','green'];
+    c = ['blue','red','green','orange','black','gray','yellow','purple', 'cyan', 'maroon'];
     
     if folder == None:
         folder = './Small_simulated_data/';
  
-    epoch_data_list = glob.glob("%s*.csv" %folder);
+    epoch_data_list = glob.glob("%s/*.csv" %folder);
     
     ep = 0;
     for epoch in epoch_data_list:
@@ -174,13 +182,20 @@ def plot_test_data(folder=None):
     
     plt.show();
 
-def plot_test_solution():
+def plot_test_solution(folder=None, initial_dataset=None):
     """Plot the test matching results
 
     :param folder: The folder where the data is
+    :param initial_dataset: The dataset path (&name) which define the initial sky model
     """
+    
+    if folder == None:
+        folder = './Small_simulated_data/';
+    if initial_dataset == None:
+        initial_dataset = './Small_simulated_data/test_epoch00.csv';
+    
     #Solve the problem
-    sm = tinder_for_galaxy_positions();
+    sm = tinder_for_galaxy_positions(folder, initial_dataset);
     final_sky_model = human_readable_sky_model(sm);
     
     #Plot   
@@ -192,7 +207,7 @@ def plot_test_solution():
     plt.clf();
     plt.title('Sources on the sky', size=24);
     
-    c = ['blue','red','green'];
+    c = ['blue','red','green','orange','black','gray','yellow','purple', 'cyan', 'maroon'];
     
     for i in range(0,len(final_sky_model)):
         ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err = get_model_columns(final_sky_model,i);
@@ -243,5 +258,6 @@ if __name__ == "__main__":
     #plot_epoch_sky(epoch_0);
     #plot_two_epoch_sky(epoch_0, epoch_1)
 
-    plot_test_data();
-    plot_test_solution();
+    #plot_test_data(folder='./Subdatacube');
+    #plot_test_solution();
+    plot_test_solution(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');
