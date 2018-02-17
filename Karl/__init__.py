@@ -1,13 +1,20 @@
-#Efficient_catalog_crossmatching-skymining_hatcahon_2018
-import panda as pd
-from matplotlib import
-scatterplot
-# path = "C:\Users\karl_\Dropbox\Study, business\Data Science, John Hopkins, Coursera\Hackastron\spectra_ADACS"
+import numpy as np
+from matplotlib import pylab;
+from matplotlib import pyplot as plt;
 
-os.chdir(path)
-data1 = "172829-28461_spectra_etau"
-csv_file = csv.reader('data1',delimiter=' ')
+#=================================================
+#MAIN
+#=================================================
+epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
 
-xs = [x[0] for x in li]
-ys = [x[1] for x in li]
-plt.plot(xs, ys)
+ID = epoch_0[:,0];
+RA = epoch_0[:,1];
+RA_err = epoch_0[:,2];
+Dec = epoch_0[:,3];
+Dec_err = epoch_0[:,4];
+Flux = epoch_0[:,5];
+Flux_err = epoch_0[:,6];
+
+plt.clf();
+plt.plot(RA,Dec,'.');
+plt.show();
