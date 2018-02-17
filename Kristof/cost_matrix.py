@@ -109,8 +109,8 @@ def compute_cost_matrix(sm,observed_epoch,epoch_ID):
             
             if distance(galaxy_model.sky_position,
                     (observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, g_id)).RA, observed_galaxy_position(epoch=epoch_ID,\
-                    obs=galaxy_obs(observed_epoch, g_id)).Dec)) > 9 * galaxy_model.sky_radial_sigma:
-                cost_matrix[i,j] = 0;
+                    obs=galaxy_obs(observed_epoch, g_id)).Dec)) > 6 * galaxy_model.sky_radial_sigma:
+                cost_matrix[i,j] = 0.000001;
             else:
                 cost_matrix[i,j] = p_value_of_observation(galaxy_model,observed_galaxy_position(epoch=epoch_ID, obs=galaxy_obs(observed_epoch, g_id)));
            
