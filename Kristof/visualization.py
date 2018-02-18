@@ -34,6 +34,7 @@ import numpy as np;
 from matplotlib import pylab;
 from matplotlib import pyplot as plt;
 import glob;
+import random;
 
 from position_model import *;
 from matching_algorithm import *;
@@ -290,16 +291,19 @@ def different_color_plot_of_model_galaxies(folder=None):
     plt.clf();
     plt.title('Matched sources on the sky', size=24);
       
-    c = ['red','green','blue'];
+    color_for_three = ['red','green','blue'];
    
     i = 0;
     for galaxy_position_model in galaxy_position_model_data_list:
         epoch = np.genfromtxt(galaxy_position_model,  dtype=float, delimiter=',');
         
         ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch = get_position_model_colums(epoch);
-
+        
+        r = lambda: random.randint(0,255);
+        c = '#%02X%02X%02X' % (r(),r(),r());
+        
         plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err,
-                    fmt='o', color=c[i], alpha=0.5);
+                    fmt='o', color=c, alpha=0.5);
                     
         i += 1;
 
@@ -317,6 +321,9 @@ def different_color_plot_of_model_galaxies(folder=None):
 if __name__ == "__main__":
     """Testing
     """
+    #epoch_0 = np.genfromtxt('../Small/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
+    #epoch_1 = np.genfromtxt('../Small/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
+    
     #epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
     #epoch_1 = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
 
@@ -325,7 +332,9 @@ if __name__ == "__main__":
 
     #different_color_plot_of_model_galaxies();
     
-    plot_test_data();
-    plot_test_solution();
+    #plot_test_data();
+    #plot_test_solution();
     #plot_test_data(folder='./Subdatacube');
     #plot_test_solution(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');
+
+    different_color_plot_of_model_galaxies(folder='./Small_solution/');

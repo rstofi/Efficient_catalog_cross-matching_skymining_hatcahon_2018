@@ -128,7 +128,7 @@ def save_sky_model(sm, folder=None):
     if folder == None:
         folder = './Final_sky_model/';
     
-    for i in range(0,len(final_sky_model)):
+    for i in range(0,len(sm)):
         if i <= 9:
             np.savetxt('%sGalaxy_position_model0%s.csv' %(folder,i), sm[i], delimiter=',');
         else:

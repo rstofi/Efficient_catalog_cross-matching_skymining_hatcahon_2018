@@ -258,7 +258,7 @@ def p_value_of_observation(model_galaxy, obs):
     else:
         p_value_Flux = stats.norm.cdf(obs.Flux, model_Flux_mu, model_Flux_sigma) * 2;#Two sided distribution p value for RA
     
-    final_p_value = 1 - ((p_value_RA + p_value_Dec + p_value_Flux) / 3);
+    final_p_value = 2 - ((p_value_RA + p_value_Dec + p_value_Flux) / 3);#if I ould use 1 - p_value I will get fucked in the Hungarian algorithm if p_value is 1
 
     return final_p_value;
     

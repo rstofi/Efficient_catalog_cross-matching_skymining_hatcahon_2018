@@ -76,7 +76,7 @@ def tinder_for_galaxy_positions(folder=None, initial_dataset=None):
     :param initial_dataset: The dataset path (&name) which define the initial sky model
     """
 
-    #Create Initial sky model
+    #Create Initial sky model ===> Must be epoch0000 !!!!
     if initial_dataset == None:
         initial_dataset = './Small_simulated_data/test_epoch00.csv';
     
@@ -90,18 +90,22 @@ def tinder_for_galaxy_positions(folder=None, initial_dataset=None):
         folder = './Small_simulated_data/';
     
     epoch_data_list = sorted(glob.glob("%s*.csv" %folder));
-
+    
     #Iterate trough observations
-    ep = 1;#Epoch ID
+    ep = 0;#Epoch ID
     for epoch in epoch_data_list:
-        epoch = np.genfromtxt(epoch,  dtype=float, delimiter=',');
-    
-        sm = solve_matching_for_galaxy_positions(sm, epoch, ep);
-    
-        log.info("Epoch %i solved" %ep);
-        print('Epoch %i solved' %ep);#Logger not working somehow
+        if epoch == epoch_data_list[0]:
+            pass;
+            ep += 1;
+        else:
+            epoch = np.genfromtxt(epoch,  dtype=float, delimiter=',');
         
-        ep += 1;
+            sm = solve_matching_for_galaxy_positions(sm, epoch, ep);
+        
+            log.info("Epoch %i solved" %ep);
+            print('Epoch %i solved' %ep);#Logger not working somehow
+            
+            ep += 1;
         
     return sm;
 

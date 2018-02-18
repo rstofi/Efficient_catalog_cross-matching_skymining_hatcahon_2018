@@ -65,18 +65,29 @@ def get_filtered_galaxy_ID_list(folder=None):
     source_index_matrix[:,0] = np.genfromtxt(filtered_match_first_iteration_list[0],  dtype=float, delimiter=',')[:,0];
     
     j = 0;
-    for filtered_match_file in filtered_match_first_iteration_list[:1]:
+    for filtered_match_file in filtered_match_first_iteration_list[:-1]:
         epoch = np.genfromtxt(filtered_match_file,  dtype=float, delimiter=',');
         
         for i in range(0,max_filter):
             if source_index_matrix[i,j] in epoch[:,0]:
-                source_index_matrix[i,j+1] = epoch[np.argwhere(epoch[:,0] == source_index_matrix[i,j]),7];
+                source_index_matrix[i,j+1] = epoch[np.argwhere(epoch[:,0] == source_index_matrix[i,j]),1];
             else:
                 source_index_matrix[i,j+1] = -1;
                                 
         j += 1;
-
-    return source_index_matrix;
+    
+    #Remove -1 bruteforce
+    final_source_index_list = [];
+    
+    for i in range(0,source_index_matrix.shape[0]):
+        if np.amin(source_index_matrix[i,:]) < 0:
+            pass;
+        else:
+            final_source_index_list.append(source_index_matrix[i,:]);
+    
+    final_source_index_matrix = np.array(final_source_index_list)
+    
+    return final_source_index_matrix;
 
 #=================================================
 #MAIN
@@ -86,17 +97,11 @@ if __name__ == '__main__':
     """
     
 
-    source_index_matrix = get_filtered_galaxy_ID_list();    
+    source_index_matrix = get_filtered_galaxy_ID_list(folder='../Karl/Data/');    
+    np.savetxt('./Karl_filtering_solution_for_full_dataset.csv', source_index_matrix, delimiter=',');
+    print('The identified galaxies in all apochs: %i' %source_index_matrix.shape[0]);
+    
 
-    folder = '../Data/';
-    
-    observed_epoch_list = sorted(glob.glob("%s*.csv" %folder));
-    
-    
-    
-    
-    
-    print(source_index_matrix);
         
         
     
