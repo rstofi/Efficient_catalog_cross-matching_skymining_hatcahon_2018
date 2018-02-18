@@ -323,11 +323,9 @@ if __name__ == "__main__":
     #plot_epoch_sky(epoch_0);
     #plot_two_epoch_sky(epoch_0, epoch_1)
 
-    different_color_plot_of_model_galaxies();
+    #different_color_plot_of_model_galaxies();
     
-    exit();
-
-    #plot_test_data();
+    plot_test_data();
     plot_test_solution();
     #plot_test_data(folder='./Subdatacube');
     #plot_test_solution(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');
