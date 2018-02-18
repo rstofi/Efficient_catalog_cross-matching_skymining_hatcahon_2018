@@ -66,6 +66,23 @@ def get_data_colums(epoch):
 
     return ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err;
 
+def get_position_model_colums(gal_model):
+    """Return the data columns of a galaxy position model
+    
+    :param gal_model: One galaxy model from output of the sky model, already readed from .csv
+    """
+    
+    ID = gal_model[:,0];
+    RA = gal_model[:,1];
+    RA_err = gal_model[:,2];
+    Dec = gal_model[:,3];
+    Dec_err = gal_model[:,4];
+    Flux = gal_model[:,5];
+    Flux_err = gal_model[:,6];
+    Epoch = gal_model[:,7];
+
+    return ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch;
+
 #=================================================
 #PLOT FUNCTIONS
 #=================================================
@@ -134,7 +151,7 @@ def plot_test_data(folder=None):
     if folder == None:
         folder = './Small_simulated_data/';
  
-    epoch_data_list = glob.glob("%s/*.csv" %folder);
+    epoch_data_list = sorted(glob.glob("%s/*.csv" %folder));
     
     ep = 0;
     for epoch in epoch_data_list:
@@ -210,7 +227,8 @@ def plot_test_solution(folder=None, initial_dataset=None):
     c = ['blue','red','green','orange','black','gray','yellow','purple', 'cyan', 'maroon'];
     
     for i in range(0,len(final_sky_model)):
-        ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err = get_model_columns(final_sky_model,i);
+        #ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Eopch = get_model_columns(final_sky_model,i);
+        ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Eopch = get_model_columns(final_sky_model,i);
         
         plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err,
                     fmt='o', color=c[i], alpha=0.5);
@@ -231,11 +249,9 @@ def plot_test_solution(folder=None, initial_dataset=None):
     plt.title('Flux vs time', size=24);
 
     for i in range(0,len(final_sky_model)):
-        ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err = get_model_columns(final_sky_model,i);
-        
-        time = np.linspace(0,final_sky_model[i].shape[0]-1,final_sky_model[i].shape[0]);
+        ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch = get_model_columns(final_sky_model,i);
                 
-        plt.errorbar(time, Flux, yerr=Flux_err,
+        plt.errorbar(Epoch, Flux, yerr=Flux_err,
                     fmt='o', color=c[i], alpha=0.5);
 
     pylab.xlabel('Time [epoch number]', fontsize = 24);
@@ -245,6 +261,55 @@ def plot_test_solution(folder=None, initial_dataset=None):
     plt.tight_layout();
     
     plt.show();
+
+def plot_galaxy_positon_model(galaxy_model_file=None):
+    """Plot a galaxy position model from a final sky model output dataset
+    
+    :param galaxy_model_file: The path to the galaxy model position file
+    """
+    
+    if galaxy_model_file == None:
+        galaxy_model_file = './Final_sky_model/Galaxy_position_model00.csv'
+    
+    galaxy_position_model = np.genfromtxt(galaxy_model_file,  dtype=float, delimiter=',');
+    
+    ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch = get_position_model_colums(galaxy_position_model);
+    
+    
+def different_color_plot_of_model_galaxies(folder=None):
+    """Plot each model galaxy in a given folder with different color
+    
+    :param folder: The folder where the data is
+    """
+    if folder == None:
+        folder = './Final_sky_model/';
+ 
+    galaxy_position_model_data_list = sorted(glob.glob("%s/*.csv" %folder));
+    
+    fig=plt.figure(figsize=(12,12));
+    plt.clf();
+    plt.title('Matched sources on the sky', size=24);
+      
+    c = ['red','green','blue'];
+   
+    i = 0;
+    for galaxy_position_model in galaxy_position_model_data_list:
+        epoch = np.genfromtxt(galaxy_position_model,  dtype=float, delimiter=',');
+        
+        ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch = get_position_model_colums(epoch);
+
+        plt.errorbar(RA, Dec, xerr=RA_err, yerr=Dec_err,
+                    fmt='o', color=c[i], alpha=0.5);
+                    
+        i += 1;
+
+    pylab.xlabel('RA [deg]', fontsize = 24);
+    pylab.ylabel('Dec [deg]', fontsize = 24);
+    plt.tick_params(labelsize=18);
+
+    plt.tight_layout();
+    
+    plt.show();    
 
 #=================================================
 #MAIN
@@ -258,6 +323,9 @@ if __name__ == "__main__":
     #plot_epoch_sky(epoch_0);
     #plot_two_epoch_sky(epoch_0, epoch_1)
 
+    #different_color_plot_of_model_galaxies();
+    
+    plot_test_data();
+    plot_test_solution();
     #plot_test_data(folder='./Subdatacube');
-    #plot_test_solution();
-    plot_test_solution(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');
+    #plot_test_solution(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');

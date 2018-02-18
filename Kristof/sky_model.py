@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ------------------------------
 
-Cost matrix for the Hungarian algorithm
+Sky model
 
 """
 
@@ -81,12 +81,12 @@ def human_readable_sky_model(sm):
     model_ID = 0;#The index in the sky model list    
     for galaxy_model in sm.galax_model_list:
         
-        human_readable_galaxy_model = np.zeros((len(sm.galax_model_list[0].obs_list),7));
+        human_readable_galaxy_model = np.zeros((len(sm.galax_model_list[0].obs_list),8));
         
         obs_ID = 0;
         for obs in sm.galax_model_list[model_ID].obs_list:
             
-            human_readable_galaxy_model[obs_ID,:] = obs.ID, obs.RA, obs.RA_err, obs.Dec, obs.Dec_err, obs.Flux, obs.Flux_err;
+            human_readable_galaxy_model[obs_ID,:] = obs.ID, obs.RA, obs.RA_err, obs.Dec, obs.Dec_err, obs.Flux, obs.Flux_err, obs.epoch;
             obs_ID += 1;
         
         #Sort galaxy model by obs ID
@@ -114,8 +114,25 @@ def get_model_columns(sm,model_index):
     Dec_err = sm[model_index][:,4];
     Flux = sm[model_index][:,5];
     Flux_err = sm[model_index][:,6];
+    Epoch = sm[model_index][:,7];
 
-    return ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err;
+    return ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch;
+
+def save_sky_model(sm, folder=None):
+    """Save the sky model into a folder
+    
+    :param sm: Final sky model in human readable format
+    :param folder: The output folder
+    """
+    
+    if folder == None:
+        folder = './Final_sky_model/';
+    
+    for i in range(0,len(final_sky_model)):
+        if i <= 9:
+            np.savetxt('%sGalaxy_position_model0%s.csv' %(folder,i), sm[i], delimiter=',');
+        else:
+            np.savetxt('%sGalaxy_position_model0%s.csv' %(folder,i), sm[i], delimiter=',');
 
 #=================================================
 #MAIN
@@ -127,8 +144,10 @@ if __name__ == '__main__':
     
     final_sky_model = human_readable_sky_model(sm);
     
-    print(len(final_sky_model));
-    print(final_sky_model[0][:,0]);
+    #print(len(final_sky_model));
+    #print(final_sky_model[0][:,0]);
+    
+    save_sky_model(final_sky_model, folder=None);
     
 
     
