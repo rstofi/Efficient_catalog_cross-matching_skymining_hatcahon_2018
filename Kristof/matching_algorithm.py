@@ -89,7 +89,7 @@ def tinder_for_galaxy_positions(folder=None, initial_dataset=None):
     if folder == None:
         folder = './Small_simulated_data/';
     
-    epoch_data_list = glob.glob("%s*.csv" %folder);
+    epoch_data_list = sorted(glob.glob("%s*.csv" %folder));
 
     #Iterate trough observations
     ep = 1;#Epoch ID

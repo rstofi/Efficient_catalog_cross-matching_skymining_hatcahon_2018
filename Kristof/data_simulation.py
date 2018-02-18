@@ -98,7 +98,7 @@ def firts_rows_from_actual_dataset(N):
     :param N: The number of rows used
     """
     
-    epoch_data_list = glob.glob("../Data/*.csv");
+    epoch_data_list = sorted(glob.glob("../Data/*.csv"));
     
     i = 0;
     for epoch in epoch_data_list:
