@@ -96,11 +96,13 @@ if __name__ == '__main__':
     """Test
     """
     
-
-    source_index_matrix = get_filtered_galaxy_ID_list(folder='../Karl/Data/');    
-    np.savetxt('./Karl_filtering_solution_for_full_dataset.csv', source_index_matrix, delimiter=',');
-    print('The identified galaxies in all apochs: %i' %source_index_matrix.shape[0]);
+    #source_index_matrix = get_filtered_galaxy_ID_list(folder='../Karl/Data/');    
+    #np.savetxt('./Karl_filtering_solution_for_full_dataset.csv', source_index_matrix, delimiter=',');
+    #print('The identified galaxies in all apochs: %i' %source_index_matrix.shape[0]);
     
+    source_index_matrix = get_filtered_galaxy_ID_list(folder='../Karl/Small/');    
+    np.savetxt('./Karl_filtering_solution_for_small_dataset.csv', source_index_matrix, delimiter=',');
+    print('The identified galaxies in all apochs: %i' %source_index_matrix.shape[0]);
 
         
         

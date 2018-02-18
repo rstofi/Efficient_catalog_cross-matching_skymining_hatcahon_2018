@@ -88,7 +88,7 @@ def get_position_model_colums(gal_model):
 #PLOT FUNCTIONS
 #=================================================
 
-def plot_epoch_sky(epoch):
+def plot_epoch_sky(epoch,save=False):
     """Plot the observed galaxy positions in the sky
     
     :param epoch: given epoch in a numpy array, already readed from .csv 
@@ -108,9 +108,12 @@ def plot_epoch_sky(epoch):
 
     plt.tight_layout();
     
-    plt.show();
+    if save == True:
+        plt.savefig('./Figures/initial_sky_model.png');
+    else:
+        plt.show();
 
-def plot_two_epoch_sky(epoch1, epoch2):
+def plot_two_epoch_sky(epoch1, epoch2,save=False):
     """Plot the observed galaxy positions in the sky
     
     :param epoch1: The firs given epoch in a numpy array, already readed from .csv
@@ -133,7 +136,10 @@ def plot_two_epoch_sky(epoch1, epoch2):
 
     plt.tight_layout();
     
-    plt.show();
+    if save == True:
+        plt.savefig('./Figures/sky_model_update.png');
+    else:
+        plt.show();
 
 def plot_test_data(folder=None):
     """Plot the test data I created
@@ -277,7 +283,7 @@ def plot_galaxy_positon_model(galaxy_model_file=None):
     ID, RA, RA_err, Dec, Dec_err, Flux, Flux_err, Epoch = get_position_model_colums(galaxy_position_model);
     
     
-def different_color_plot_of_model_galaxies(folder=None):
+def different_color_plot_of_model_galaxies(folder=None,save=False):
     """Plot each model galaxy in a given folder with different color
     
     :param folder: The folder where the data is
@@ -291,7 +297,7 @@ def different_color_plot_of_model_galaxies(folder=None):
     plt.clf();
     plt.title('Matched sources on the sky', size=24);
       
-    color_for_three = ['red','green','blue'];
+    color_for_three = ['blue','red','green'];
    
     i = 0;
     for galaxy_position_model in galaxy_position_model_data_list:
@@ -313,7 +319,10 @@ def different_color_plot_of_model_galaxies(folder=None):
 
     plt.tight_layout();
     
-    plt.show();    
+    if save == True:
+        plt.savefig('./Figures/final_sky_model.png');
+    else:
+        plt.show();
 
 #=================================================
 #MAIN
@@ -327,14 +336,14 @@ if __name__ == "__main__":
     #epoch_0 = np.genfromtxt('../Data/epoch00.csv',  dtype=float, delimiter=',',  skip_header=1);
     #epoch_1 = np.genfromtxt('../Data/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1);
 
-    #plot_epoch_sky(epoch_0);
-    #plot_two_epoch_sky(epoch_0, epoch_1)
+    #plot_epoch_sky(epoch_0,save=True);
+    #plot_two_epoch_sky(epoch_0, epoch_1,save=True);
 
     #different_color_plot_of_model_galaxies();
     
-    #plot_test_data();
-    #plot_test_solution();
+    plot_test_data();
+    plot_test_solution();
     #plot_test_data(folder='./Subdatacube');
     #plot_test_solution(folder='./Subdatacube/', initial_dataset='./Subdatacube/test_epoch00.csv');
 
-    different_color_plot_of_model_galaxies(folder='./Small_solution/');
+    #different_color_plot_of_model_galaxies(folder='./Small_solution/',save=False);
