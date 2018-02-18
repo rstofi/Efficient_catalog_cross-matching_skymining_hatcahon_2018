@@ -299,7 +299,7 @@ if __name__ == "__main__":
     j =0
     for i in files_list:
         #print(i)
-        if j == 49:
+        if j == 1:
             break
         epoch_0 = np.genfromtxt(i,  dtype=float, delimiter=',',  skip_header=1);
         epoch_1 = np.genfromtxt(files_list[j+1],  dtype=float, delimiter=',',  skip_header=1);
@@ -352,13 +352,13 @@ if __name__ == "__main__":
         #epoch_1 = np.genfromtxt('C:/Users/karl_/Dropbox/Study, business/Data Science, John Hopkins, Coursera/Hackastron/epoch01.csv',  dtype=float, delimiter=',',  skip_header=1)
 
         #plot_epoch_sky(epoch_0);
-        #plot_two_epoch_sky(epoch_0, epoch_1)
+        plot_two_epoch_sky(epoch_0, epoch_1)
         #plot_two_epoch_sky(x_array, y_array)
-        #plot_two_epoch_sky_cl(epoch_0, epoch01temp) #KR: Plot with circles
+        plot_two_epoch_sky_cl(epoch_0, epoch01temp) #KR: Plot with circles
 
         #filter_pcnt
         #plot_two_epoch_sky_nbr(epoch_0, epoch_1,epoch00_matchY_w_01,epoch01_matchY_w_00)
-        #plot_two_epoch_sky_nbr(epoch_0, epoch_1,epoch00_matchN_w_01,epoch01_matchN_w_00)
+        plot_two_epoch_sky_nbr(epoch_0, epoch_1,epoch00_matchN_w_01,epoch01_matchN_w_00)
 
 #-----------------------------------
 
