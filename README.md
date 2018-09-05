@@ -1,4 +1,4 @@
-# Efficient Catalog Cross-matching @skymining_hatcahon_2018
+# Efficient Catalog Cross-matching @skymining_hatcahon_2018 [![Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
 The repo contains our team solution for the 'Efficient Catalog Cross-matching' challenge @ SkyMining hachaton, Perth, 2018.
 
 -------
